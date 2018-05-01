@@ -26,7 +26,7 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 
 # Images
-red_bat = pygame.image.load('images/red.png')
+red_bat = pygame.image.load('assets/images/red.png')
 
 
 

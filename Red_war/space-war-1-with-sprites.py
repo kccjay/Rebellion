@@ -26,8 +26,8 @@ YELLOW = (255, 255, 0)
 GREEN = (100, 255, 100)
 
 # Images
-ship_img = pygame.image.load('assets/images/player.png')
-laser_img = pygame.image.load('assets/images/laserGreen.png')
+ship_img = pygame.image.load('assets/images/red2.0.png')
+laser_img = pygame.image.load('assets/images/laser2.0.png')
 
 
 # Game classes
