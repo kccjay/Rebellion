@@ -26,7 +26,7 @@ YELLOW = (255, 255, 0)
 GREEN = (100, 255, 100)
 
 # Images
-ship_img = pygame.image.load('assets/images/red2.0.png')
+ship_img = pygame.image.load('assets/images/orange2.0.png')
 laser_img = pygame.image.load('assets/images/laser2.0.png')
 
 
@@ -99,7 +99,7 @@ class Fleet:
 
     
 # Make game objects
-ship = Ship(384, 536, ship_img)
+ship = Ship(384, 470, ship_img)
 
 
 # Make sprite groups

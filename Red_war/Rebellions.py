@@ -9,7 +9,7 @@ pygame.init()
 WIDTH = 800
 HEIGHT = 600
 SIZE = (WIDTH, HEIGHT)
-TITLE = "Space War"
+TITLE = "Rebellion War"
 screen = pygame.display.set_mode(SIZE)
 pygame.display.set_caption(TITLE)
 
@@ -23,20 +23,24 @@ RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
-GREEN = (0, 255, 0)
+GREEN = (100, 255, 100)
 
 # Images
-red_bat = pygame.image.load('assets/images/red.png')
+orange_bat = pygame.image.load('assets/images/orange2.0.png')
+laser_img = pygame.image.load('assets/images/laser2.0.png')
 
 
 
 # Game classes
-class Ship:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.w = 32
-        self.h = 32
+class Ship(pygame.sprite.Sprite):
+    def __init__(self, x, y, image):
+        super().__init__()
+
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        
         self.speed = 3
         self.shield = 10
 
@@ -47,11 +51,10 @@ class Ship:
         self.x += self.speed
 
     def shoot(self):
-        x = self.x + self.w / 2 - 2
-        y = self.y
-        laser = Laser(x, y)
-        lasers.append(laser)
-        print("Pew!")
+        laser = Laser(laser_img)
+        laser.rect.centerx = self.rect.centerx
+        laser.rect.centery = self.rect.top
+        lasers.add(laser)
 
     def update(self):
         pass
@@ -60,22 +63,18 @@ class Ship:
         rect = [self.x, self.y, self.w, self.h]
         #pygame.draw.rect(screen, RED, rect)
     
-class Laser:
+class Laser(:
     
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.h = 8
-        self.w = 4
+    def __init__(self, image):
+        super().__init__()
+
+        self.image = image
+        self.rect = self.image.get_rect()
+        
         self.speed = 5
 
     def update(self):
-        self.y -= self.speed
-
-    def draw(self):
-        rect = [self.x, self.y, self.w, self.h]
-        pygame.draw.rect(screen, GREEN, rect)
-        
+        self.rect.y -= self.speed
     
 class Mob:
 
