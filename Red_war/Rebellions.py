@@ -1,3 +1,10 @@
+#
+#
+#
+#
+#
+#
+#
 # Imports
 import pygame
 import random
@@ -185,6 +192,11 @@ bombs = pygame.sprite.Group()
 fleet = Fleet(mobs)
 
 # Game loop
+PLAYING = 1
+START = 0
+END = 3
+PAUSE = 4
+
 done = False
 
 while not done:
@@ -192,17 +204,30 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+            
+        #Finish the playing end etc
         elif event.type == pygame.KEYDOWN:
+            if stage == START:
+                
+            if event.key == pygame.K_1:
+                    stage = PLAYING
+                    
             if event.key == pygame.K_SPACE:
-                player.shoot()
+                 player.shoot()
+                 
+            pressed = pygame.key.get_pressed()
 
-    pressed = pygame.key.get_pressed()
-
-    if pressed[pygame.K_LEFT]:
-        player.move_left()
-    elif pressed[pygame.K_RIGHT]:
-        player.move_right()
+            if pressed[pygame.K_LEFT]:
+                player.move_left()
+            elif pressed[pygame.K_RIGHT]:
+                player.move_right()
         
+
+        elif stage == END:
+            if event.key == pygame.K_2:
+                
+                
+            
     
     # Game logic (Check for collisions, update points, etc.)
     ships.update()
