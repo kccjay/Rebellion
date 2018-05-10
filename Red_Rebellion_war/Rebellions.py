@@ -39,6 +39,7 @@ laser_img = pygame.image.load('assets/images/laser2.0.png')
 red_bat = pygame.image.load('assets/images/red3.0.png')
 e_laser = pygame.image.load('assets/images/purple_eye.png')
 
+deceased = False
 
 
 # Game classes
@@ -52,7 +53,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.y = y
         
         self.speed = 3
-        self.shield = 10
+        self.shield = 1
 
     def move_left(self):
         self.rect.x -= self.speed
@@ -76,8 +77,7 @@ class Ship(pygame.sprite.Sprite):
         if self.shield == 0:
             #EXPLOSION.play()
             self.kill()
-            stage = END
-
+            deceased = True
             
     
 class Laser(pygame.sprite.Sprite):
@@ -114,7 +114,8 @@ class Mob(pygame.sprite.Sprite):
         if len(hit_list) > 0:
             #EXPLOSION.play()
             self.kill()
-            stage = END
+            deceased = True 
+
 
 class Bomb(pygame.sprite.Sprite):
     
@@ -178,9 +179,12 @@ def setup():
     # Make game objects
     player = Ship(384, 450, orange_bat)
     lasers = pygame.sprite.Group()
-    mob1 = Mob(128, 64, red_bat)
-    mob2 = Mob(256, 64, red_bat)
-    mob3 = Mob(384, 64, red_bat)
+    mob1 = Mob(128, 74, red_bat)
+    mob2 = Mob(256, 74, red_bat)
+    mob3 = Mob(384, 74, red_bat)
+    mob4 = Mob(512, 74, red_bat)
+    mob5 = Mob(640, 74, red_bat)
+    mob6 = Mob(768, 74, red_bat)
 
 
     # Make sprite groups
@@ -188,7 +192,7 @@ def setup():
     ships.add(player)
 
     mobs = pygame.sprite.Group()
-    mobs.add(mob1, mob2, mob3)
+    mobs.add(mob1, mob2, mob3, mob4, mob5, mob6)
 
     bombs = pygame.sprite.Group()
 
@@ -208,7 +212,7 @@ setup()
 done = False
 
 while not done:
-    # Event processing (React to key presses, mouse clicks, etc.)
+    # Event processing (React to key presses, mouse clicks, etc.)    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -222,9 +226,9 @@ while not done:
             elif stage == PLAYING:
                 if event.key == pygame.K_SPACE:
                         player.shoot()
-                if event.key == pygame.K_6:
-                    stage = END
-
+                if event.key == pygame.K_x:
+                        stage = END
+                    
             elif stage == END:
                 if event.key == pygame.K_2:
                     setup()
@@ -232,10 +236,9 @@ while not done:
             
          
     pressed = pygame.key.get_pressed()
-
-    if pressed[pygame.K_LEFT]:
+    if pressed[pygame.K_LEFT] and stage == PLAYING:
         player.move_left()
-    elif pressed[pygame.K_RIGHT]:
+    elif pressed[pygame.K_RIGHT] and stage == PLAYING:
         player.move_right()
     # Game logic (Check for collisions, update points, etc.)
     if stage == PLAYING:
@@ -244,6 +247,9 @@ while not done:
         mobs.update(lasers)
         bombs.update()
         fleet.update()
+
+    if deceased == True:
+        stage = END
         
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
     screen.fill(BLACK)
@@ -258,6 +264,8 @@ while not done:
 
     # Limit refresh rate of game loop 
     clock.tick(refresh_rate)
+
+
 
 
 # Close window and quit
