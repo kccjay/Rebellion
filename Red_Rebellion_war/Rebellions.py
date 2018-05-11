@@ -53,7 +53,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.y = y
         
         self.speed = 3
-        self.shield = 1
+        self.shield = 5
 
     def move_left(self):
         self.rect.x -= self.speed
@@ -69,6 +69,8 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         hit_list = pygame.sprite.spritecollide(self, bombs, True)
+        reloc_xr = 850
+        reloc_xl = 0
         
         for hit in hit_list:
             # play hit sound
@@ -78,6 +80,12 @@ class Ship(pygame.sprite.Sprite):
             #EXPLOSION.play()
             self.kill()
             deceased = True
+            
+        if self.rect.x >= reloc_xr:
+            self.rect.x = reloc_xr
+        elif self.rect.x <= reloc_xl:
+            self.rect.x = reloc_xl
+
             
     
 class Laser(pygame.sprite.Sprite):
@@ -92,6 +100,9 @@ class Laser(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y -= self.speed
+
+        if self.rect.y <= 0:
+            self.kill()
     
 class Mob(pygame.sprite.Sprite):
     def __init__(self, x, y, image):
@@ -129,6 +140,9 @@ class Bomb(pygame.sprite.Sprite):
 
     def update(self):
         self.rect.y += self.speed
+
+        if self.rect.y >= 632:
+            self.kill()
     
     
 class Fleet:
@@ -155,7 +169,10 @@ class Fleet:
         if reverse == True:
             self.moving_right = not self.moving_right
             for m in mobs:
-                m.rect.y += 32
+                m.rect.y += 20
+
+                if m.rect.y >= 634:
+                    m.kill()
             
 
     def choose_bomber(self):
@@ -250,7 +267,7 @@ while not done:
 
     if deceased == True:
         stage = END
-        
+
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
     screen.fill(BLACK)
     lasers.draw(screen)
