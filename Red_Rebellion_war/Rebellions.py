@@ -34,6 +34,8 @@ YELLOW = (255, 255, 0)
 GREEN = (100, 255, 100)
 
 # Images
+purple_star = pygame.image.load('assets/images/end_background.png')
+starry_night = pygame.image.load('assets/images/background.png')
 orange_bat = pygame.image.load('assets/images/orange2.0.png')
 laser_img = pygame.image.load('assets/images/laser2.0.png')
 red_bat = pygame.image.load('assets/images/red3.0.png')
@@ -125,8 +127,9 @@ class Mob(pygame.sprite.Sprite):
         if len(hit_list) > 0:
             #EXPLOSION.play()
             self.kill()
-            deceased = True 
 
+        if len(hit_list) == 0:
+            stage = END
 
 class Bomb(pygame.sprite.Sprite):
     
@@ -169,7 +172,7 @@ class Fleet:
         if reverse == True:
             self.moving_right = not self.moving_right
             for m in mobs:
-                m.rect.y += 20
+                m.rect.y += 15
 
                 if m.rect.y >= 634:
                     m.kill()
@@ -264,12 +267,11 @@ while not done:
         mobs.update(lasers)
         bombs.update()
         fleet.update()
-
-    if deceased == True:
-        stage = END
+    if stage == END:
+        screen.blit(orange_bat, (0, 0))
 
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
-    screen.fill(BLACK)
+    screen.blit(starry_night, (0, 0))        
     lasers.draw(screen)
     ships.draw(screen)
     bombs.draw(screen)
