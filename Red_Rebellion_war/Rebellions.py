@@ -81,12 +81,12 @@ class Ship(pygame.sprite.Sprite):
         if self.shield == 0:
             #EXPLOSION.play()
             self.kill()
-            deceased = True
             
         if self.rect.x >= reloc_xr:
             self.rect.x = reloc_xr
         elif self.rect.x <= reloc_xl:
             self.rect.x = reloc_xl
+        
 
             
     
@@ -129,7 +129,7 @@ class Mob(pygame.sprite.Sprite):
             self.kill()
 
         if len(hit_list) == 0:
-            stage = END
+            self.kill()
 
 class Bomb(pygame.sprite.Sprite):
     
@@ -267,8 +267,12 @@ while not done:
         mobs.update(lasers)
         bombs.update()
         fleet.update()
-    if stage == END:
-        screen.blit(orange_bat, (0, 0))
+        
+        if len(ships) == 0:
+            stage = END
+        if len(mobs) == 0:
+            stage = END
+        
 
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
     screen.blit(starry_night, (0, 0))        
@@ -276,6 +280,9 @@ while not done:
     ships.draw(screen)
     bombs.draw(screen)
     mobs.draw(screen)
+
+    if stage == END:
+        screen.blit(orange_bat, (0, 0))
     
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
