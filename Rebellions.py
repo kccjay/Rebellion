@@ -40,7 +40,8 @@ orange_bat = pygame.image.load('assets/images/orange2.0.png')
 laser_img = pygame.image.load('assets/images/laser2.0.png')
 red_bat = pygame.image.load('assets/images/red3.0.png')
 e_laser = pygame.image.load('assets/images/purple_ting.png')
-light_laser = pygame.image.load('assets/images/tri_war.png')
+green_crab = pygame.image.load('assets/images/tri_war.png')
+light_laser = pygame.image.load('assets/images/purple_fire.png')
 
 deceased = False
 
@@ -141,7 +142,7 @@ class Mob2(pygame.sprite.Sprite):
         self.rect.y = y
 
     def drop_bomb(self):
-        bomb = Bomb(e_laser)
+        bomb = Bomb(light_laser)
         bomb.rect.centerx = self.rect.centerx
         bomb.rect.centery = self.rect.bottom
         bombs.add(bomb)
@@ -230,6 +231,8 @@ def setup():
     mob4 = Mob(512, 74, red_bat)
     mob5 = Mob(640, 74, red_bat)
     mob6 = Mob(768, 74, red_bat)
+    mob7 = Mob2(61, -100, green_crab)
+    mob8 = Mob2(241, -100, green_crab)
 
 
     # Make sprite groups
@@ -237,7 +240,7 @@ def setup():
     ships.add(player)
 
     mobs = pygame.sprite.Group()
-    mobs.add(mob1, mob2, mob3, mob4, mob5, mob6)
+    mobs.add(mob1, mob2, mob3, mob4, mob5, mob6, mob7, mob8)
 
     bombs = pygame.sprite.Group()
 
@@ -308,11 +311,9 @@ while not done:
     mobs.draw(screen)
 
     #used to indicate the stage is on END
-    '''
     if stage == END:
-        screen.blit(orange_bat, (0, 0))
-    '''
-    
+        print("The game has ended")
+        print("Title card coming soon")
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
 
