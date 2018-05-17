@@ -38,11 +38,14 @@ purple_star = pygame.image.load('assets/images/end_background.png')
 starry_night = pygame.image.load('assets/images/background.png')
 orange_bat = pygame.image.load('assets/images/orange2.0.png')
 laser_img = pygame.image.load('assets/images/laser2.0.png')
-red_bat = pygame.image.load('assets/images/red3.0.png')
-e_laser = pygame.image.load('assets/images/purple_eye.png')
+red_bat = pygame.image.load('assets/images/red3.1.png')
+e_laser = pygame.image.load('assets/images/purple_ting.png')
+green_crab = pygame.image.load('assets/images/tri_war.png')
+light_laser = pygame.image.load('assets/images/purple_fire.png')
+get_hit = pygame.image.load('assets/images/hit.png')
 
 deceased = False
-
+hit = False
 
 # Game classes
 class Ship(pygame.sprite.Sprite):
@@ -81,6 +84,7 @@ class Ship(pygame.sprite.Sprite):
         if self.shield == 0:
             #EXPLOSION.play()
             self.kill()
+            print("*player* EXPLOSION!")
             
         if self.rect.x >= reloc_xr:
             self.rect.x = reloc_xr
@@ -98,7 +102,7 @@ class Laser(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         
-        self.speed = 5
+        self.speed = 7
 
     def update(self):
         self.rect.y -= self.speed
@@ -127,9 +131,39 @@ class Mob(pygame.sprite.Sprite):
         if len(hit_list) > 0:
             #EXPLOSION.play()
             self.kill()
+            print("*enemy*BOOM!")
 
-        if len(hit_list) == 0:
+class Mob2(pygame.sprite.Sprite):
+    def __init__(self, x, y, image):
+        super().__init__()
+
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+        self.shield = 2
+
+    def drop_bomb(self):
+        bomb = Bomb(light_laser)
+        bomb.rect.centerx = self.rect.centerx
+        bomb.rect.centery = self.rect.bottom
+        bombs.add(bomb)
+    
+    def update(self, lasers):
+        hit_list = pygame.sprite.spritecollide(self, lasers, True)
+
+        for hit in hit_list:
+            # play hit sound
+            self.shield -= 1
+            print("*clink*")
+            
+
+        if self.shield == 0:
+            #EXPLOSION.play()
             self.kill()
+            print("*enemy* KABOOM!")
+
 
 class Bomb(pygame.sprite.Sprite):
     
@@ -172,8 +206,9 @@ class Fleet:
         if reverse == True:
             self.moving_right = not self.moving_right
             for m in mobs:
+                #determines the speed of the fleet
                 m.rect.y += 15
-
+                #kills the fleet when they reach the beyond point
                 if m.rect.y >= 634:
                     m.kill()
             
@@ -197,22 +232,27 @@ class Fleet:
 def setup():
     global player, mobs, bombs, fleet, ships, lasers, stage
     # Make game objects
-    player = Ship(384, 450, orange_bat)
+    #500
+    player = Ship(420, 450, orange_bat)
     lasers = pygame.sprite.Group()
+    #mob1 = Mob(128, 74, red_bat)
     mob1 = Mob(128, 74, red_bat)
     mob2 = Mob(256, 74, red_bat)
     mob3 = Mob(384, 74, red_bat)
-    mob4 = Mob(512, 74, red_bat)
-    mob5 = Mob(640, 74, red_bat)
-    mob6 = Mob(768, 74, red_bat)
-
+    mob4 = Mob(573, 74, red_bat)
+    mob5 = Mob(701, 74, red_bat)
+    mob6 = Mob(829, 74, red_bat)
+    mob7 = Mob2(120, -100, green_crab)
+    mob8 = Mob2(701, -100, green_crab)
+    mob9 = Mob2(410, -100, green_crab)
+    
 
     # Make sprite groups
     ships = pygame.sprite.GroupSingle()
     ships.add(player)
 
     mobs = pygame.sprite.Group()
-    mobs.add(mob1, mob2, mob3, mob4, mob5, mob6)
+    mobs.add(mob1, mob2, mob3, mob4, mob5, mob6, mob7, mob8, mob9)
 
     bombs = pygame.sprite.Group()
 
@@ -225,7 +265,7 @@ PLAYING = 1
 START = 0
 END = 3
 PAUSE = 4
-
+pew_shot = 0
 #stage = START
 
 setup()
@@ -245,7 +285,9 @@ while not done:
                         
             elif stage == PLAYING:
                 if event.key == pygame.K_SPACE:
+                        pew_shot += 1
                         player.shoot()
+                        print("Pew!" + str(pew_shot))
                 if event.key == pygame.K_x:
                         stage = END
                     
@@ -267,12 +309,13 @@ while not done:
         mobs.update(lasers)
         bombs.update()
         fleet.update()
-        
+
+    if stage == PLAYING:    
         if len(ships) == 0:
             stage = END
         if len(mobs) == 0:
-            stage = END
-        
+            stage = END        
+    
 
     # Drawing code (Describe the picture. It isn't actually drawn yet.)
     screen.blit(starry_night, (0, 0))        
@@ -281,9 +324,10 @@ while not done:
     bombs.draw(screen)
     mobs.draw(screen)
 
+    #used to indicate the stage is on END
     if stage == END:
-        screen.blit(orange_bat, (0, 0))
-    
+        print("The game has ended")
+        print("Title card coming soon")
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
 
