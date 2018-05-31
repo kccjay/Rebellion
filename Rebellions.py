@@ -119,6 +119,7 @@ class Ship(pygame.sprite.Sprite):
         self.rect.y = y
         
         self.speed = 5
+        self.plusspeed = 50
         self.shield = 5
         
         
@@ -130,6 +131,12 @@ class Ship(pygame.sprite.Sprite):
         
     def move_right(self):
         self.rect.x += self.speed
+
+    def move_left2(self):
+        self.rect.x -= self.plusspeed
+        
+    def move_right2(self):
+        self.rect.x += self.plusspeed
 
     def shoot(self):
         laser = Laser(laser_img)
@@ -213,7 +220,6 @@ class Mob(pygame.sprite.Sprite):
 class Mob2(pygame.sprite.Sprite):
     def __init__(self, x, y, image, image2, image3, image4):
         super().__init__()
-
         self.image = image
         self.image2 = image2
         self.image3 = image3
@@ -241,7 +247,7 @@ class Mob2(pygame.sprite.Sprite):
             # This is suppose to change the character
             #showing the character is hurt
             self.image4
-            print("*clink*")
+            print("*clink" + str(self.shield) + "*")
             
 
         if self.shield == 0:
@@ -441,11 +447,11 @@ while not done:
                         pew_shot += 1
                         player.shoot()
                         print("Pew!" + str(pew_shot))
-                if event.key == pygame.K_x:
+                if event.key == pygame.K_DELETE:
                         stage = END
                     
             elif stage == END:
-                if event.key == pygame.K_2:
+                if event.key == pygame.K_DELETE:
                     setup()
                                     
             
@@ -455,6 +461,10 @@ while not done:
         player.move_left()
     elif pressed[pygame.K_RIGHT] and stage == PLAYING:
         player.move_right()
+    if pressed[pygame.K_a] and stage == PLAYING:
+        player.move_left2()
+    elif pressed[pygame.K_d] and stage == PLAYING:
+        player.move_right2()
     # Game logic (Check for collisions, update points, etc.)
     if stage == START:
         screen_splash.update()
@@ -490,8 +500,6 @@ while not done:
         screen_splash.draw(screen)
     if stage == END:
         screen_splash.draw(screen)
-  
-
     
     # Update screen (Actually draw the picture in the window.)
     pygame.display.flip()
